@@ -5,24 +5,24 @@ package librato
 
 type Metrics interface {
 	Close()
-	GetCounter(name string) chan int64
-	GetCustomCounter(name string) chan map[string]int64
-	GetCustomGauge(name string) chan map[string]int64
-	GetGauge(name string) chan int64
-	NewCounter(name string) chan int64
-	NewCustomCounter(name string) chan map[string]int64
-	NewCustomGauge(name string) chan map[string]int64
-	NewGauge(name string) chan int64
+	GetCounter(name string) chan float64
+	GetCustomCounter(name string) chan map[string]float64
+	GetCustomGauge(name string) chan map[string]float64
+	GetGauge(name string) chan float64
+	NewCounter(name string) chan float64
+	NewCustomCounter(name string) chan map[string]float64
+	NewCustomGauge(name string) chan map[string]float64
+	NewGauge(name string) chan float64
 	Wait()
 }
 
 func handle(i interface{}, bodyMetric tmetric) bool {
-	var obj map[string]int64
+	var obj map[string]float64
 	var ok bool
 	switch ch := i.(type) {
-	case chan int64:
+	case chan float64:
 		bodyMetric["value"], ok = <-ch
-	case chan map[string]int64:
+	case chan map[string]float64:
 		obj, ok = <-ch
 		for k, v := range obj {
 			bodyMetric[k] = v
